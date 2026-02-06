@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link active">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Shopping Cart</h1>
+        <p>Review your items before checkout</p>
+    </div>
+
+    <!-- Cart Section -->
+    <section class="cart-page">
+        <div class="container">
+            <div class="cart-layout" id="cart-layout">
+                <!-- Cart Items -->
+                <div class="cart-items-container" id="cart-items-container">
+                    <div id="cart-items">
+                        <!-- Cart items loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h2>Order Summary</h2>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal (<span id="item-count">0</span> items)</span>
+                        <span id="subtotal">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span id="shipping">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Tax (8%)</span>
+                        <span id="tax">$0.00</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="total">$0.00</span>
+                    </div>
+
+                    <div class="promo-code">
+                        <input type="text" id="promo-code" placeholder="Promo code">
+                        <button class="btn btn-outline" onclick="applyPromoCode()">Apply</button>
+                    </div>
+
+                    <button class="btn btn-success btn-block" onclick="proceedToCheckout()" id="checkout-btn">
+                        <i class="fas fa-lock"></i> Proceed to Checkout
+                    </button>
+
+                    <div class="secure-checkout">
+                        <p><i class="fas fa-shield-alt"></i> Secure Checkout</p>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-amex"></i>
+                            <i class="fab fa-cc-paypal"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Cart State -->
+            <div class="empty-cart" id="empty-cart" style="display: none;">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>Your cart is empty</h2>
+                <p>Looks like you haven't added any items to your cart yet.</p>
+                <a href="products.html" class="btn btn-primary">Start Shopping</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-credit-card"></i> Checkout</h2>
+                <button class="modal-close" onclick="closeCheckoutModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="checkout-form">
+                    <h3>Shipping Information</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="shipping-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="shipping-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="shipping-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="shipping-address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="shipping-city" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ZIP Code</label>
+                            <input type="text" id="shipping-zip" required>
+                        </div>
+                    </div>
+                    
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="card" checked>
+                            <i class="fas fa-credit-card"></i> Credit/Debit Card
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="paypal">
+                            <i class="fab fa-paypal"></i> PayPal
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cod">
+                            <i class="fas fa-money-bill"></i> Cash on Delivery
+                        </label>
+                    </div>
+
+                    <div class="order-total-section">
+                        <span>Total to Pay:</span>
+                        <span id="checkout-total">$0.00</span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fas fa-check"></i> Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-body h3 {
+            margin: 20px 0 15px;
+            font-size: 18px;
+        }
+        
+        .modal-body h3:first-child {
+            margin-top: 0;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-option:hover {
+            border-color: #667eea;
+        }
+        
+        .payment-option input:checked + i {
+            color: #667eea;
+        }
+        
+        .payment-option input:checked ~ * {
+            color: #667eea;
+        }
+        
+        .order-total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .secure-checkout {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .secure-checkout p {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .payment-icons {
+            font-size: 24px;
+            color: #999;
+        }
+        
+        .payment-icons i {
+            margin: 0 5px;
+        }
+    </style>
+
+    <script src="js/app.js"></script>
+    <script>
+        let promoDiscount = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCartItems();
+            updateCartBadge();
+            checkAuthState();
+
+            // Pre-fill email if logged in
+            if (currentUser) {
+                document.getElementById('shipping-email').value = currentUser.email || '';
+                document.getElementById('shipping-name').value = currentUser.name || '';
+            }
+
+            // Checkout form submission
+            document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await processCheckout();
+            });
+        });
+
+        function displayCartItems() {
+            const container = document.getElementById('cart-items');
+            const cartLayout = document.getElementById('cart-layout');
+            const emptyCart = document.getElementById('empty-cart');
+            
+            if (cart.length === 0) {
+                cartLayout.style.display = 'none';
+                emptyCart.style.display = 'block';
+                return;
+            }
+            
+            cartLayout.style.display = 'grid';
+            emptyCart.style.display = 'none';
+            
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="${item.image || 'https://via.placeholder.com/120x120?text=No+Image'}" 
+                         alt="${item.name}" 
+                         class="cart-item-image"
+                         onerror="this.src='https://via.placeholder.com/120x120?text=No+Image'">
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-name">${item.name}</h3>
+                        <span class="cart-item-category">${item.category || 'General'}</span>
+                        <div class="cart-item-price">$${item.price.toFixed(2)}</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span>${item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateCartQuantity(${item.id}, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="item-total">
+                            $${(item.price * item.quantity).toFixed(2)}
+                        </div>
+                        <button class="btn btn-danger btn-small" onclick="removeFromCart(${item.id})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            const subtotal = getCartTotal();
+            const shipping = subtotal >= 50 ? 0 : 5.99;
+            const tax = subtotal * 0.08;
+            const total = subtotal + shipping + tax - promoDiscount;
+            
+            document.getElementById('item-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('subtotal').textContent = `$${subtotal.toFixed(2)}`;
+            document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `$${shipping.toFixed(2)}`;
+            document.getElementById('tax').textContent = `$${tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `$${Math.max(0, total).toFixed(2)}`;
+            document.getElementById('checkout-total').textContent = `$${Math.max(0, total).toFixed(2)}`;
+            
+            // Update checkout button
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (cart.length === 0) {
+                checkoutBtn.disabled = true;
+                checkoutBtn.style.opacity = '0.5';
+            } else {
+                checkoutBtn.disabled = false;
+                checkoutBtn.style.opacity = '1';
+            }
+        }
+
+        function applyPromoCode() {
+            const code = document.getElementById('promo-code').value.toUpperCase();
+            
+            // Demo promo codes
+            const promoCodes = {
+                'SAVE10': 0.10,
+                'SAVE20': 0.20,
+                'WELCOME15': 0.15
+            };
+            
+            if (promoCodes[code]) {
+                promoDiscount = getCartTotal() * promoCodes[code];
+                showNotification(`Promo code applied! ${promoCodes[code] * 100}% off`, 'success');
+                updateCartSummary();
+            } else {
+                showNotification('Invalid promo code', 'danger');
+            }
+        }
+
+        function proceedToCheckout() {
+            if (!requireAuth()) return;
+            
+            document.getElementById('checkout-modal').style.display = 'flex';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').style.display = 'none';
+        }
+
+        async function processCheckout() {
+            const shippingInfo = {
+                name: document.getElementById('shipping-name').value,
+                email: document.getElementById('shipping-email').value,
+                phone: document.getElementById('shipping-phone').value,
+                address: document.getElementById('shipping-address').value,
+                city: document.getElementById('shipping-city').value,
+                zip: document.getElementById('shipping-zip').value,
+                paymentMethod: document.querySelector('input[name="payment"]:checked').value
+            };
+            
+            const result = await createOrder(shippingInfo);
+            
+            if (result.success) {
+                closeCheckoutModal();
+                showNotification('Order placed successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'orders.html';
+                }, 2000);
+            } else {
+                showNotification('Error placing order: ' + result.error, 'danger');
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('checkout-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'checkout-modal') {
+                closeCheckoutModal();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link active">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>API Documentation</h1>
+        <p>Complete reference for the ShopMax E-Commerce API</p>
+    </div>
+
+    <!-- API Docs Section -->
+    <section class="api-docs-page">
+        <div class="container">
+            <div class="api-layout">
+                <!-- Sidebar Navigation -->
+                <aside class="api-sidebar">
+                    <div class="api-nav">
+                        <div class="api-nav-item active" onclick="scrollToSection('overview')">
+                            <i class="fas fa-book"></i> Overview
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('authentication')">
+                            <i class="fas fa-key"></i> Authentication
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('products')">
+                            <i class="fas fa-box"></i> Products
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('categories')">
+                            <i class="fas fa-tags"></i> Categories
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('users')">
+                            <i class="fas fa-users"></i> Users
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('orders')">
+                            <i class="fas fa-shopping-cart"></i> Orders
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('reviews')">
+                            <i class="fas fa-star"></i> Reviews
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('testing')">
+                            <i class="fas fa-flask"></i> API Tester
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- API Content -->
+                <div class="api-content">
+                    <!-- Overview Section -->
+                    <div class="api-section" id="overview">
+                        <h2><i class="fas fa-info-circle"></i> API Overview</h2>
+                        <p>Welcome to the ShopMax E-Commerce API documentation. This API provides access to products, categories, users, orders, and reviews for building e-commerce applications.</p>
+                        
+                        <h3>Base URL</h3>
+                        <div class="endpoint-code">http://localhost:3000/api</div>
+                        
+                        <h3>Response Format</h3>
+                        <p>All responses are returned in JSON format with the following structure:</p>
+                        <div class="endpoint-code">{
+  "success": true,
+  "data": { ... },
+  "count": 10,
+  "page": 1,
+  "totalPages": 5
+}</div>
+                        
+                        <h3>Error Format</h3>
+                        <div class="endpoint-code">{
+  "success": false,
+  "error": "Error message",
+  "message": "Detailed error information"
+}</div>
+                    </div>
+
+                    <!-- Authentication Section -->
+                    <div class="api-section" id="authentication">
+                        <h2><i class="fas fa-key"></i> Authentication</h2>
+                        <p>Most API endpoints require authentication using JWT (JSON Web Tokens). Include the token in the Authorization header.</p>
+                        
+                        <h3>Authentication Header</h3>
+                        <div class="endpoint-code">Authorization: Bearer <your-jwt-token></div>
+                        
+                        <h3>Getting a Token</h3>
+                        <p>Obtain a JWT token by logging in with your credentials:</p>
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/users/login</span>
+                            </div>
+                            <p class="endpoint-description">Authenticate user and receive JWT token</p>
+                        </div>
+                        
+                        <h3>Request Body</h3>
+                        <div class="endpoint-code">{
+  "email": "user@example.com",
+  "password": "password123"
+}</div>
+                        
+                        <h3>Response</h3>
+                        <div class="endpoint-code">{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR...",
+    "role": "user"
+  }
+}</div>
+                    </div>
+
+                    <!-- Products Section -->
+                    <div class="api-section" id="products">
+                        <h2><i class="fas fa-box"></i> Products API</h2>
+                        <p>Manage products in the store catalog.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/products</span>
+                            </div>
+                            <p class="endpoint-description">Get all products with pagination and filters</p>
+                        </div>
+                        
+                        <h3>Query Parameters</h3>
+                        <table class="api-table">
+                            <tr><td>page</td><td>Page number (default: 1)</td></tr>
+                            <tr><td>limit</td><td>Items per page (default: 10)</td></tr>
+                            <tr><td>search</td><td>Search term for name/description</td></tr>
+                            <tr><td>category</td><td>Filter by category ID</td></tr>
+                            <tr><td>minPrice</td><td>Minimum price filter</td></tr>
+                            <tr><td>maxPrice</td><td>Maximum price filter</td></tr>
+                            <tr><td>featured</td><td>Show featured products only</td></tr>
+                            <tr><td>sortBy</td><td>Field to sort by (name, price, id)</td></tr>
+                            <tr><td>sortOrder</td><td>asc or desc</td></tr>
+                        </table>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/products/:id</span>
+                            </div>
+                            <p class="endpoint-description">Get product by ID</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/products/featured</span>
+                            </div>
+                            <p class="endpoint-description">Get featured products</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/products</span>
+                            </div>
+                            <p class="endpoint-description">Create new product (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/products/:id</span>
+                            </div>
+                            <p class="endpoint-description">Update product (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-delete">DELETE</span>
+                                <span class="endpoint-path">/products/:id</span>
+                            </div>
+                            <p class="endpoint-description">Delete product (Admin only)</p>
+                        </div>
+                    </div>
+
+                    <!-- Categories Section -->
+                    <div class="api-section" id="categories">
+                        <h2><i class="fas fa-tags"></i> Categories API</h2>
+                        <p>Manage product categories.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/categories</span>
+                            </div>
+                            <p class="endpoint-description">Get all categories</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/categories/:id</span>
+                            </div>
+                            <p class="endpoint-description">Get category by ID</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/categories</span>
+                            </div>
+                            <p class="endpoint-description">Create category (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/categories/:id</span>
+                            </div>
+                            <p class="endpoint-description">Update category (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-delete">DELETE</span>
+                                <span class="endpoint-path">/categories/:id</span>
+                            </div>
+                            <p class="endpoint-description">Delete category (Admin only)</p>
+                        </div>
+                    </div>
+
+                    <!-- Users Section -->
+                    <div class="api-section" id="users">
+                        <h2><i class="fas fa-users"></i> Users API</h2>
+                        <p>User authentication and profile management.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/users/register</span>
+                            </div>
+                            <p class="endpoint-description">Register new user</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/users/login</span>
+                            </div>
+                            <p class="endpoint-description">Login user</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/users/profile</span>
+                            </div>
+                            <p class="endpoint-description">Get current user profile (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/users/profile</span>
+                            </div>
+                            <p class="endpoint-description">Update user profile (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/users/orders</span>
+                            </div>
+                            <p class="endpoint-description">Get user orders (Auth required)</p>
+                        </div>
+                    </div>
+
+                    <!-- Orders Section -->
+                    <div class="api-section" id="orders">
+                        <h2><i class="fas fa-shopping-cart"></i> Orders API</h2>
+                        <p>Order management and tracking.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/orders</span>
+                            </div>
+                            <p class="endpoint-description">Get user orders (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/orders/:id</span>
+                            </div>
+                            <p class="endpoint-description">Get order by ID (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/orders</span>
+                            </div>
+                            <p class="endpoint-description">Create new order (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/orders/:id/status</span>
+                            </div>
+                            <p class="endpoint-description">Update order status (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/orders/:id/cancel</span>
+                            </div>
+                            <p class="endpoint-description">Cancel order (Auth required)</p>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="api-section" id="reviews">
+                        <h2><i class="fas fa-star"></i> Reviews API</h2>
+                        <p>Product review management.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/reviews/product/:productId</span>
+                            </div>
+                            <p class="endpoint-description">Get product reviews</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/reviews</span>
+                            </div>
+                            <p class="endpoint-description">Add review (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-delete">DELETE</span>
+                                <span class="endpoint-path">/reviews/:id</span>
+                            </div>
+                            <p class="endpoint-description">Delete review (Auth required)</p>
+                        </div>
+                    </div>
+
+                    <!-- API Testing Section -->
+                    <div class="api-section" id="testing">
+                        <h2><i class="fas fa-flask"></i> API Tester</h2>
+                        <p>Test API endpoints directly from this page.</p>
+                        
+                        <div class="form-group">
+                            <label>Endpoint</label>
+                            <input type="text" id="test-endpoint" placeholder="/products" value="/products">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Method</label>
+                            <select id="test-method">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Request Body (JSON)</label>
+                            <textarea id="test-body" rows="5" placeholder='{"name": "New Product", "price": 99.99}'></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Authentication Token (optional)</label>
+                            <input type="text" id="test-token" placeholder="Paste JWT token here">
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="testApiEndpoint()">
+                            <i class="fas fa-paper-plane"></i> Send Request
+                        </button>
+                        
+                        <h3 style="margin-top: 20px;">Response</h3>
+                        <div class="endpoint-code" id="test-response">Response will appear here...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .api-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .api-table td {
+            padding: 10px;
+        }
+        
+        .api-table td:first-child {
+            font-weight: 600;
+            color: #667eea;
+            width: 150px;
+        }
+        
+        .api-nav-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .api-nav-item:hover {
+            background: var(--light-color);
+        }
+        
+        .api-nav-item.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .api-nav-item i {
+            width: 20px;
+        }
+    </style>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            checkAuthState();
+            setupSidebarScroll();
+        });
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const offset = 20;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - offset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // Update active nav item
+            document.querySelectorAll('.api-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        function setupSidebarScroll() {
+            const sections = document.querySelectorAll('.api-section');
+            const navItems = document.querySelectorAll('.api-nav-item');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('onclick').includes(current)) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        async function testApiEndpoint() {
+            const endpoint = document.getElementById('test-endpoint').value;
+            const method = document.getElementById('test-method').value;
+            const body = document.getElementById('test-body').value;
+            const token = document.getElementById('test-token').value || localStorage.getItem('token');
+            const responseArea = document.getElementById('test-response');
+            
+            responseArea.innerHTML = '<span style="color: #ffc107;">Sending request...</span>';
+            
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (token) {
+                options.headers['Authorization'] = `Bearer ${token}`;
+            }
+            
+            if (body && method !== 'GET' && method !== 'DELETE') {
+                try {
+                    options.body = JSON.stringify(JSON.parse(body));
+                } catch (e) {
+                    responseArea.innerHTML = '<span style="color: #dc3545;">Invalid JSON in request body</span>';
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}${endpoint}`, options);
+                const data = await response.json();
+                responseArea.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseArea.innerHTML = `<span style="color: #dc3545;">Error: ${error.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link active">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Our Products</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+    </div>
+
+    <!-- Products Section -->
+    <section class="products-page">
+        <div class="container">
+            <div class="products-layout">
+                <!-- Sidebar Filters -->
+                <aside class="sidebar">
+                    <div class="filter-section">
+                        <h3><i class="fas fa-search"></i> Search</h3>
+                        <div class="search-box">
+                            <input type="text" id="search-input" placeholder="Search products...">
+                            <button onclick="searchProducts()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-filter"></i> Filters</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" id="featured-filter" onchange="applyFilters()">
+                                <span>Featured Only</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" id="in-stock-filter" checked onchange="applyFilters()">
+                                <span>In Stock</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-dollar-sign"></i> Price Range</h3>
+                        <div class="price-range">
+                            <input type="number" id="min-price" placeholder="Min" onchange="applyFilters()">
+                            <span>-</span>
+                            <input type="number" id="max-price" placeholder="Max" onchange="applyFilters()">
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-list"></i> Categories</h3>
+                        <div class="filter-options" id="category-filters">
+                            <!-- Categories loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-sort"></i> Sort By</h3>
+                        <select id="sort-select" onchange="applyFilters()">
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="price-asc">Price (Low to High)</option>
+                            <option value="price-desc">Price (High to Low)</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-outline clear-filters" onclick="clearFilters()">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                </aside>
+
+                <!-- Products Grid -->
+                <div class="products-container">
+                    <div class="products-header">
+                        <h2>All Products <span id="product-count">(0)</span></h2>
+                        <div class="view-options">
+                            <button class="btn btn-outline btn-small" onclick="setView('grid')">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="btn btn-outline btn-small" onclick="setView('list')">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="products-grid" id="products-grid">
+                        <!-- Products loaded dynamically -->
+                    </div>
+
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let allProducts = [];
+        let selectedCategories = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadProducts();
+            updateCartBadge();
+            checkAuthState();
+
+            // Check URL params for category filter
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryId = urlParams.get('category');
+            if (categoryId) {
+                selectedCategories = [parseInt(categoryId)];
+                document.getElementById('category-filters').querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    if (parseInt(cb.value) === parseInt(categoryId)) cb.checked = true;
+                });
+            }
+
+            // Search on Enter key
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchProducts();
+            });
+        });
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const container = document.getElementById('category-filters');
+                    container.innerHTML = result.data.map(category => `
+                        <label class="filter-option">
+                            <input type="checkbox" value="${category.id}" onchange="toggleCategory(${category.id})">
+                            <span>${category.name}</span>
+                        </label>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const params = new URLSearchParams();
+                params.append('page', currentPage);
+                params.append('limit', 12);
+
+                const search = document.getElementById('search-input').value;
+                if (search) params.append('search', search);
+
+                const minPrice = document.getElementById('min-price').value;
+                const maxPrice = document.getElementById('max-price').value;
+                if (minPrice) params.append('minPrice', minPrice);
+                if (maxPrice) params.append('maxPrice', maxPrice);
+
+                if (document.getElementById('featured-filter').checked) {
+                    params.append('featured', 'true');
+                }
+
+                const sortBy = document.getElementById('sort-select').value;
+                if (sortBy === 'price-asc') {
+                    params.append('sortBy', 'price');
+                    params.append('sortOrder', 'asc');
+                } else if (sortBy === 'price-desc') {
+                    params.append('sortBy', 'price');
+                    params.append('sortOrder', 'desc');
+                } else if (sortBy === 'name-asc') {
+                    params.append('sortBy', 'name');
+                    params.append('sortOrder', 'asc');
+                } else if (sortBy === 'name-desc') {
+                    params.append('sortBy', 'name');
+                    params.append('sortOrder', 'desc');
+                } else if (sortBy === 'newest') {
+                    params.append('sortBy', 'id');
+                    params.append('sortOrder', 'desc');
+                }
+
+                const response = await fetch(`/api/products?${params.toString()}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allProducts = result.data;
+                    totalPages = result.totalPages || Math.ceil(result.count / 12);
+                    currentPage = result.page || 1;
+                    
+                    displayProducts(result.data);
+                    updatePagination();
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        function displayProducts(products) {
+            const grid = document.getElementById('products-grid');
+            const countEl = document.getElementById('product-count');
+            
+            countEl.textContent = `(${products.length})`;
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                        <i class="fas fa-box-open" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = products.map(product => createProductCard(product)).join('');
+        }
+
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let html = `
+                <button ${currentPage === 1 ? 'disabled' : ''} onclick="goToPage(${currentPage - 1})">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+            `;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `
+                        <button class="${i === currentPage ? 'active' : ''}" onclick="goToPage(${i})">
+                            ${i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += '<button disabled>...</button>';
+                }
+            }
+            
+            html += `
+                <button ${currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(${currentPage + 1})">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            
+            pagination.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function searchProducts() {
+            currentPage = 1;
+            loadProducts();
+        }
+
+        function applyFilters() {
+            currentPage = 1;
+            loadProducts();
+        }
+
+        function toggleCategory(categoryId) {
+            const index = selectedCategories.indexOf(categoryId);
+            if (index > -1) {
+                selectedCategories.splice(index, 1);
+            } else {
+                selectedCategories.push(categoryId);
+            }
+            applyFilters();
+        }
+
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('min-price').value = '';
+            document.getElementById('max-price').value = '';
+            document.getElementById('featured-filter').checked = false;
+            document.getElementById('sort-select').value = 'name-asc';
+            
+            document.querySelectorAll('#category-filters input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            selectedCategories = [];
+            currentPage = 1;
+            loadProducts();
+        }
+
+        function setView(view) {
+            const grid = document.getElementById('products-grid');
+            grid.className = view === 'grid' ? 'products-grid' : 'products-list';
+        }
+    </script>
+</body>
+</html>
