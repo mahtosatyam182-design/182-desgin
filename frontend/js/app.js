@@ -18,20 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
 // ============== Utility Functions ==============
 
 function createProductCard(product) {
-    const imageUrl = product.image || `https://via.placeholder.com/300x200?text=${encodeURIComponent(product.name)}`;
+    const imageUrl = product.image || `https://via.placeholder.com/300x200?text=?{encodeURIComponent(product.name)}`;
     return `
         <div class="product-card">
-            <img src="${imageUrl}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
+            <img src="?{imageUrl}" alt="?{product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
             <div class="product-info">
-                <span class="product-category">${product.category || 'General'}</span>
-                <h3 class="product-name">${product.name}</h3>
-                <p class="product-description">${product.description || 'No description available'}</p>
-                <div class="product-price">$${product.price.toFixed(2)}</div>
+                <span class="product-category">?{product.category || 'General'}</span>
+                <h3 class="product-name">?{product.name}</h3>
+                <p class="product-description">?{product.description || 'No description available'}</p>
+                <div class="product-price">??{product.price.toFixed(2)}</div>
                 <div class="product-actions">
-                    <button class="btn btn-outline btn-small" onclick="addToWishlist(${product.id})">
+                    <button class="btn btn-outline btn-small" onclick="addToWishlist(?{product.id})">
                         <i class="far fa-heart"></i>
                     </button>
-                    <button class="btn btn-primary btn-small" onclick="addToCart(${product.id})">
+                    <button class="btn btn-primary btn-small" onclick="addToCart(?{product.id})">
                         <i class="fas fa-cart-plus"></i> Add to Cart
                     </button>
                 </div>
@@ -42,7 +42,7 @@ function createProductCard(product) {
 
 function showNotification(message, type = 'success') {
     const notification = document.createElement('div');
-    notification.className = `alert alert-${type}`;
+    notification.className = `alert alert-?{type}`;
     notification.style.cssText = 'position: fixed; top: 90px; right: 20px; z-index: 9999; max-width: 350px; animation: slideIn 0.3s ease;';
     notification.innerHTML = message;
     document.body.appendChild(notification);
@@ -79,13 +79,13 @@ function showAuthButtons(show) {
 function updateUserName() {
     const userNameEl = document.getElementById('user-name');
     if (userNameEl && currentUser) {
-        userNameEl.textContent = `Hi, ${currentUser.name}`;
+        userNameEl.textContent = `Hi, ?{currentUser.name}`;
     }
 }
 
 async function login(email, password) {
     try {
-        const response = await fetch(`${API_BASE}/users/login`, {
+        const response = await fetch(`?{API_BASE}/users/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -110,7 +110,7 @@ async function login(email, password) {
 
 async function register(name, email, password) {
     try {
-        const response = await fetch(`${API_BASE}/users/register`, {
+        const response = await fetch(`?{API_BASE}/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
@@ -156,7 +156,7 @@ function getAuthHeaders() {
     const token = localStorage.getItem('token');
     return {
         'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ${token}` })
+        ...(token && { 'Authorization': `Bearer ?{token}` })
     };
 }
 
@@ -189,7 +189,7 @@ function addToCart(productId) {
         product.quantity++;
     } else {
         // Fetch product details
-        fetch(`${API_BASE}/products/${productId}`)
+        fetch(`?{API_BASE}/products/?{productId}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
@@ -204,7 +204,7 @@ function addToCart(productId) {
                     });
                     saveCartToStorage();
                     updateCartBadge();
-                    showNotification(`${productData.name} added to cart!`, 'success');
+                    showNotification(`?{productData.name} added to cart!`, 'success');
                 }
             });
     }
@@ -295,7 +295,7 @@ async function createOrder(shippingInfo) {
     };
     
     try {
-        const response = await fetch(`${API_BASE}/orders`, {
+        const response = await fetch(`?{API_BASE}/orders`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(orderData)
@@ -319,7 +319,7 @@ async function loadOrders() {
     if (!requireAuth()) return;
     
     try {
-        const response = await fetch(`${API_BASE}/users/orders`, {
+        const response = await fetch(`?{API_BASE}/users/orders`, {
             headers: getAuthHeaders()
         });
         
@@ -367,7 +367,7 @@ async function testApi(endpoint, method = 'GET', body = null) {
     }
     
     try {
-        const response = await fetch(`${API_BASE}${endpoint}`, options);
+        const response = await fetch(`?{API_BASE}?{endpoint}`, options);
         const data = await response.json();
         return data;
     } catch (error) {

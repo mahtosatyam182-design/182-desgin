@@ -3,6 +3,1101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link active">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>API Documentation</h1>
+        <p>Complete reference for the ShopMax E-Commerce API</p>
+    </div>
+
+    <!-- API Docs Section -->
+    <section class="api-docs-page">
+        <div class="container">
+            <div class="api-layout">
+                <!-- Sidebar Navigation -->
+                <aside class="api-sidebar">
+                    <div class="api-nav">
+                        <div class="api-nav-item active" onclick="scrollToSection('overview')">
+                            <i class="fas fa-book"></i> Overview
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('authentication')">
+                            <i class="fas fa-key"></i> Authentication
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('products')">
+                            <i class="fas fa-box"></i> Products
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('categories')">
+                            <i class="fas fa-tags"></i> Categories
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('users')">
+                            <i class="fas fa-users"></i> Users
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('orders')">
+                            <i class="fas fa-shopping-cart"></i> Orders
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('reviews')">
+                            <i class="fas fa-star"></i> Reviews
+                        </div>
+                        <div class="api-nav-item" onclick="scrollToSection('testing')">
+                            <i class="fas fa-flask"></i> API Tester
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- API Content -->
+                <div class="api-content">
+                    <!-- Overview Section -->
+                    <div class="api-section" id="overview">
+                        <h2><i class="fas fa-info-circle"></i> API Overview</h2>
+                        <p>Welcome to the ShopMax E-Commerce API documentation. This API provides access to products, categories, users, orders, and reviews for building e-commerce applications.</p>
+                        
+                        <h3>Base URL</h3>
+                        <div class="endpoint-code">http://localhost:3000/api</div>
+                        
+                        <h3>Response Format</h3>
+                        <p>All responses are returned in JSON format with the following structure:</p>
+                        <div class="endpoint-code">{
+  "success": true,
+  "data": { ... },
+  "count": 10,
+  "page": 1,
+  "totalPages": 5
+}</div>
+                        
+                        <h3>Error Format</h3>
+                        <div class="endpoint-code">{
+  "success": false,
+  "error": "Error message",
+  "message": "Detailed error information"
+}</div>
+                    </div>
+
+                    <!-- Authentication Section -->
+                    <div class="api-section" id="authentication">
+                        <h2><i class="fas fa-key"></i> Authentication</h2>
+                        <p>Most API endpoints require authentication using JWT (JSON Web Tokens). Include the token in the Authorization header.</p>
+                        
+                        <h3>Authentication Header</h3>
+                        <div class="endpoint-code">Authorization: Bearer <your-jwt-token></div>
+                        
+                        <h3>Getting a Token</h3>
+                        <p>Obtain a JWT token by logging in with your credentials:</p>
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/users/login</span>
+                            </div>
+                            <p class="endpoint-description">Authenticate user and receive JWT token</p>
+                        </div>
+                        
+                        <h3>Request Body</h3>
+                        <div class="endpoint-code">{
+  "email": "user@example.com",
+  "password": "password123"
+}</div>
+                        
+                        <h3>Response</h3>
+                        <div class="endpoint-code">{
+  "success": true,
+  "data": {
+    "id": 1,
+    "name": "John Doe",
+    "email": "john@example.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR...",
+    "role": "user"
+  }
+}</div>
+                    </div>
+
+                    <!-- Products Section -->
+                    <div class="api-section" id="products">
+                        <h2><i class="fas fa-box"></i> Products API</h2>
+                        <p>Manage products in the store catalog.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/products</span>
+                            </div>
+                            <p class="endpoint-description">Get all products with pagination and filters</p>
+                        </div>
+                        
+                        <h3>Query Parameters</h3>
+                        <table class="api-table">
+                            <tr><td>page</td><td>Page number (default: 1)</td></tr>
+                            <tr><td>limit</td><td>Items per page (default: 10)</td></tr>
+                            <tr><td>search</td><td>Search term for name/description</td></tr>
+                            <tr><td>category</td><td>Filter by category ID</td></tr>
+                            <tr><td>minPrice</td><td>Minimum price filter</td></tr>
+                            <tr><td>maxPrice</td><td>Maximum price filter</td></tr>
+                            <tr><td>featured</td><td>Show featured products only</td></tr>
+                            <tr><td>sortBy</td><td>Field to sort by (name, price, id)</td></tr>
+                            <tr><td>sortOrder</td><td>asc or desc</td></tr>
+                        </table>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/products/:id</span>
+                            </div>
+                            <p class="endpoint-description">Get product by ID</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/products/featured</span>
+                            </div>
+                            <p class="endpoint-description">Get featured products</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/products</span>
+                            </div>
+                            <p class="endpoint-description">Create new product (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/products/:id</span>
+                            </div>
+                            <p class="endpoint-description">Update product (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-delete">DELETE</span>
+                                <span class="endpoint-path">/products/:id</span>
+                            </div>
+                            <p class="endpoint-description">Delete product (Admin only)</p>
+                        </div>
+                    </div>
+
+                    <!-- Categories Section -->
+                    <div class="api-section" id="categories">
+                        <h2><i class="fas fa-tags"></i> Categories API</h2>
+                        <p>Manage product categories.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/categories</span>
+                            </div>
+                            <p class="endpoint-description">Get all categories</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/categories/:id</span>
+                            </div>
+                            <p class="endpoint-description">Get category by ID</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/categories</span>
+                            </div>
+                            <p class="endpoint-description">Create category (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/categories/:id</span>
+                            </div>
+                            <p class="endpoint-description">Update category (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-delete">DELETE</span>
+                                <span class="endpoint-path">/categories/:id</span>
+                            </div>
+                            <p class="endpoint-description">Delete category (Admin only)</p>
+                        </div>
+                    </div>
+
+                    <!-- Users Section -->
+                    <div class="api-section" id="users">
+                        <h2><i class="fas fa-users"></i> Users API</h2>
+                        <p>User authentication and profile management.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/users/register</span>
+                            </div>
+                            <p class="endpoint-description">Register new user</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/users/login</span>
+                            </div>
+                            <p class="endpoint-description">Login user</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/users/profile</span>
+                            </div>
+                            <p class="endpoint-description">Get current user profile (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/users/profile</span>
+                            </div>
+                            <p class="endpoint-description">Update user profile (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/users/orders</span>
+                            </div>
+                            <p class="endpoint-description">Get user orders (Auth required)</p>
+                        </div>
+                    </div>
+
+                    <!-- Orders Section -->
+                    <div class="api-section" id="orders">
+                        <h2><i class="fas fa-shopping-cart"></i> Orders API</h2>
+                        <p>Order management and tracking.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/orders</span>
+                            </div>
+                            <p class="endpoint-description">Get user orders (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/orders/:id</span>
+                            </div>
+                            <p class="endpoint-description">Get order by ID (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/orders</span>
+                            </div>
+                            <p class="endpoint-description">Create new order (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-put">PUT</span>
+                                <span class="endpoint-path">/orders/:id/status</span>
+                            </div>
+                            <p class="endpoint-description">Update order status (Admin only)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/orders/:id/cancel</span>
+                            </div>
+                            <p class="endpoint-description">Cancel order (Auth required)</p>
+                        </div>
+                    </div>
+
+                    <!-- Reviews Section -->
+                    <div class="api-section" id="reviews">
+                        <h2><i class="fas fa-star"></i> Reviews API</h2>
+                        <p>Product review management.</p>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-get">GET</span>
+                                <span class="endpoint-path">/reviews/product/:productId</span>
+                            </div>
+                            <p class="endpoint-description">Get product reviews</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-post">POST</span>
+                                <span class="endpoint-path">/reviews</span>
+                            </div>
+                            <p class="endpoint-description">Add review (Auth required)</p>
+                        </div>
+                        
+                        <div class="endpoint">
+                            <div class="endpoint-header">
+                                <span class="method method-delete">DELETE</span>
+                                <span class="endpoint-path">/reviews/:id</span>
+                            </div>
+                            <p class="endpoint-description">Delete review (Auth required)</p>
+                        </div>
+                    </div>
+
+                    <!-- API Testing Section -->
+                    <div class="api-section" id="testing">
+                        <h2><i class="fas fa-flask"></i> API Tester</h2>
+                        <p>Test API endpoints directly from this page.</p>
+                        
+                        <div class="form-group">
+                            <label>Endpoint</label>
+                            <input type="text" id="test-endpoint" placeholder="/products" value="/products">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Method</label>
+                            <select id="test-method">
+                                <option value="GET">GET</option>
+                                <option value="POST">POST</option>
+                                <option value="PUT">PUT</option>
+                                <option value="DELETE">DELETE</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Request Body (JSON)</label>
+                            <textarea id="test-body" rows="5" placeholder='{"name": "New Product", "price": 99.99}'></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>Authentication Token (optional)</label>
+                            <input type="text" id="test-token" placeholder="Paste JWT token here">
+                        </div>
+                        
+                        <button class="btn btn-primary" onclick="testApiEndpoint()">
+                            <i class="fas fa-paper-plane"></i> Send Request
+                        </button>
+                        
+                        <h3 style="margin-top: 20px;">Response</h3>
+                        <div class="endpoint-code" id="test-response">Response will appear here...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .api-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .api-table tr {
+            border-bottom: 1px solid #eee;
+        }
+        
+        .api-table td {
+            padding: 10px;
+        }
+        
+        .api-table td:first-child {
+            font-weight: 600;
+            color: #667eea;
+            width: 150px;
+        }
+        
+        .api-nav-item {
+            padding: 12px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .api-nav-item:hover {
+            background: var(--light-color);
+        }
+        
+        .api-nav-item.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+        }
+        
+        .api-nav-item i {
+            width: 20px;
+        }
+    </style>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            checkAuthState();
+            setupSidebarScroll();
+        });
+
+        function scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                const offset = 20;
+                const elementPosition = element.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - offset;
+                
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+            }
+            
+            // Update active nav item
+            document.querySelectorAll('.api-nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            event.currentTarget.classList.add('active');
+        }
+
+        function setupSidebarScroll() {
+            const sections = document.querySelectorAll('.api-section');
+            const navItems = document.querySelectorAll('.api-nav-item');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    if (window.pageYOffset >= sectionTop) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navItems.forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('onclick').includes(current)) {
+                        item.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        async function testApiEndpoint() {
+            const endpoint = document.getElementById('test-endpoint').value;
+            const method = document.getElementById('test-method').value;
+            const body = document.getElementById('test-body').value;
+            const token = document.getElementById('test-token').value || localStorage.getItem('token');
+            const responseArea = document.getElementById('test-response');
+            
+            responseArea.innerHTML = '<span style="color: #ffc107;">Sending request...</span>';
+            
+            const options = {
+                method,
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            };
+            
+            if (token) {
+                options.headers['Authorization'] = `Bearer ?{token}`;
+            }
+            
+            if (body && method !== 'GET' && method !== 'DELETE') {
+                try {
+                    options.body = JSON.stringify(JSON.parse(body));
+                } catch (e) {
+                    responseArea.innerHTML = '<span style="color: #dc3545;">Invalid JSON in request body</span>';
+                    return;
+                }
+            }
+            
+            try {
+                const response = await fetch(`?{API_BASE}?{endpoint}`, options);
+                const data = await response.json();
+                responseArea.textContent = JSON.stringify(data, null, 2);
+            } catch (error) {
+                responseArea.innerHTML = `<span style="color: #dc3545;">Error: ?{error.message}</span>`;
+            }
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link active">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Shopping Cart</h1>
+        <p>Review your items before checkout</p>
+    </div>
+
+    <!-- Cart Section -->
+    <section class="cart-page">
+        <div class="container">
+            <div class="cart-layout" id="cart-layout">
+                <!-- Cart Items -->
+                <div class="cart-items-container" id="cart-items-container">
+                    <div id="cart-items">
+                        <!-- Cart items loaded dynamically -->
+                    </div>
+                </div>
+
+                <!-- Cart Summary -->
+                <div class="cart-summary">
+                    <h2>Order Summary</h2>
+                    
+                    <div class="summary-row">
+                        <span>Subtotal (<span id="item-count">0</span> items)</span>
+                        <span id="subtotal">?0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Shipping</span>
+                        <span id="shipping">?0.00</span>
+                    </div>
+                    
+                    <div class="summary-row">
+                        <span>Tax (8%)</span>
+                        <span id="tax">?0.00</span>
+                    </div>
+                    
+                    <div class="summary-row total">
+                        <span>Total</span>
+                        <span id="total">?0.00</span>
+                    </div>
+
+                    <div class="promo-code">
+                        <input type="text" id="promo-code" placeholder="Promo code">
+                        <button class="btn btn-outline" onclick="applyPromoCode()">Apply</button>
+                    </div>
+
+                    <button class="btn btn-success btn-block" onclick="proceedToCheckout()" id="checkout-btn">
+                        <i class="fas fa-lock"></i> Proceed to Checkout
+                    </button>
+
+                    <div class="secure-checkout">
+                        <p><i class="fas fa-shield-alt"></i> Secure Checkout</p>
+                        <div class="payment-icons">
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-amex"></i>
+                            <i class="fab fa-cc-paypal"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Empty Cart State -->
+            <div class="empty-cart" id="empty-cart" style="display: none;">
+                <i class="fas fa-shopping-cart"></i>
+                <h2>Your cart is empty</h2>
+                <p>Looks like you haven't added any items to your cart yet.</p>
+                <a href="products.html" class="btn btn-primary">Start Shopping</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Checkout Modal -->
+    <div class="modal" id="checkout-modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-credit-card"></i> Checkout</h2>
+                <button class="modal-close" onclick="closeCheckoutModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="checkout-form">
+                    <h3>Shipping Information</h3>
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" id="shipping-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="shipping-email" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone</label>
+                        <input type="tel" id="shipping-phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Address</label>
+                        <input type="text" id="shipping-address" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>City</label>
+                            <input type="text" id="shipping-city" required>
+                        </div>
+                        <div class="form-group">
+                            <label>ZIP Code</label>
+                            <input type="text" id="shipping-zip" required>
+                        </div>
+                    </div>
+                    
+                    <h3>Payment Method</h3>
+                    <div class="payment-methods">
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="card" checked>
+                            <i class="fas fa-credit-card"></i> Credit/Debit Card
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="paypal">
+                            <i class="fab fa-paypal"></i> PayPal
+                        </label>
+                        <label class="payment-option">
+                            <input type="radio" name="payment" value="cod">
+                            <i class="fas fa-money-bill"></i> Cash on Delivery
+                        </label>
+                    </div>
+
+                    <div class="order-total-section">
+                        <span>Total to Pay:</span>
+                        <span id="checkout-total">?0.00</span>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success btn-block">
+                        <i class="fas fa-check"></i> Place Order
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .modal-body h3 {
+            margin: 20px 0 15px;
+            font-size: 18px;
+        }
+        
+        .modal-body h3:first-child {
+            margin-top: 0;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .payment-methods {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .payment-option:hover {
+            border-color: #667eea;
+        }
+        
+        .payment-option input:checked + i {
+            color: #667eea;
+        }
+        
+        .payment-option input:checked ~ * {
+            color: #667eea;
+        }
+        
+        .order-total-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .secure-checkout {
+            text-align: center;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+        }
+        
+        .secure-checkout p {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+        
+        .payment-icons {
+            font-size: 24px;
+            color: #999;
+        }
+        
+        .payment-icons i {
+            margin: 0 5px;
+        }
+    </style>
+
+    <script src="js/app.js"></script>
+    <script>
+        let promoDiscount = 0;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            displayCartItems();
+            updateCartBadge();
+            checkAuthState();
+
+            // Pre-fill email if logged in
+            if (currentUser) {
+                document.getElementById('shipping-email').value = currentUser.email || '';
+                document.getElementById('shipping-name').value = currentUser.name || '';
+            }
+
+            // Checkout form submission
+            document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                await processCheckout();
+            });
+        });
+
+        function displayCartItems() {
+            const container = document.getElementById('cart-items');
+            const cartLayout = document.getElementById('cart-layout');
+            const emptyCart = document.getElementById('empty-cart');
+            
+            if (cart.length === 0) {
+                cartLayout.style.display = 'none';
+                emptyCart.style.display = 'block';
+                return;
+            }
+            
+            cartLayout.style.display = 'grid';
+            emptyCart.style.display = 'none';
+            
+            container.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <img src="?{item.image || 'https://via.placeholder.com/120x120?text=No+Image'}" 
+                         alt="?{item.name}" 
+                         class="cart-item-image"
+                         onerror="this.src='https://via.placeholder.com/120x120?text=No+Image'">
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-name">?{item.name}</h3>
+                        <span class="cart-item-category">?{item.category || 'General'}</span>
+                        <div class="cart-item-price">??{item.price.toFixed(2)}</div>
+                        <div class="cart-item-quantity">
+                            <button class="quantity-btn" onclick="updateCartQuantity(?{item.id}, -1)">
+                                <i class="fas fa-minus"></i>
+                            </button>
+                            <span>?{item.quantity}</span>
+                            <button class="quantity-btn" onclick="updateCartQuantity(?{item.id}, 1)">
+                                <i class="fas fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="cart-item-actions">
+                        <div class="item-total">
+                            ??{(item.price * item.quantity).toFixed(2)}
+                        </div>
+                        <button class="btn btn-danger btn-small" onclick="removeFromCart(?{item.id})">
+                            <i class="fas fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            updateCartSummary();
+        }
+
+        function updateCartSummary() {
+            const subtotal = getCartTotal();
+            const shipping = subtotal >= 50 ? 0 : 5.99;
+            const tax = subtotal * 0.08;
+            const total = subtotal + shipping + tax - promoDiscount;
+            
+            document.getElementById('item-count').textContent = cart.reduce((sum, item) => sum + item.quantity, 0);
+            document.getElementById('subtotal').textContent = `??{subtotal.toFixed(2)}`;
+            document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `??{shipping.toFixed(2)}`;
+            document.getElementById('tax').textContent = `??{tax.toFixed(2)}`;
+            document.getElementById('total').textContent = `??{Math.max(0, total).toFixed(2)}`;
+            document.getElementById('checkout-total').textContent = `??{Math.max(0, total).toFixed(2)}`;
+            
+            // Update checkout button
+            const checkoutBtn = document.getElementById('checkout-btn');
+            if (cart.length === 0) {
+                checkoutBtn.disabled = true;
+                checkoutBtn.style.opacity = '0.5';
+            } else {
+                checkoutBtn.disabled = false;
+                checkoutBtn.style.opacity = '1';
+            }
+        }
+
+        function applyPromoCode() {
+            const code = document.getElementById('promo-code').value.toUpperCase();
+            
+            // Demo promo codes
+            const promoCodes = {
+                'SAVE10': 0.10,
+                'SAVE20': 0.20,
+                'WELCOME15': 0.15
+            };
+            
+            if (promoCodes[code]) {
+                promoDiscount = getCartTotal() * promoCodes[code];
+                showNotification(`Promo code applied! ?{promoCodes[code] * 100}% off`, 'success');
+                updateCartSummary();
+            } else {
+                showNotification('Invalid promo code', 'danger');
+            }
+        }
+
+        function proceedToCheckout() {
+            if (!requireAuth()) return;
+            
+            document.getElementById('checkout-modal').style.display = 'flex';
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById('checkout-modal').style.display = 'none';
+        }
+
+        async function processCheckout() {
+            const shippingInfo = {
+                name: document.getElementById('shipping-name').value,
+                email: document.getElementById('shipping-email').value,
+                phone: document.getElementById('shipping-phone').value,
+                address: document.getElementById('shipping-address').value,
+                city: document.getElementById('shipping-city').value,
+                zip: document.getElementById('shipping-zip').value,
+                paymentMethod: document.querySelector('input[name="payment"]:checked').value
+            };
+            
+            const result = await createOrder(shippingInfo);
+            
+            if (result.success) {
+                closeCheckoutModal();
+                showNotification('Order placed successfully!', 'success');
+                setTimeout(() => {
+                    window.location.href = 'orders.html';
+                }, 2000);
+            } else {
+                showNotification('Error placing order: ' + result.error, 'danger');
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('checkout-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'checkout-modal') {
+                closeCheckoutModal();
+            }
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ShopMax - E-Commerce Store</title>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -54,7 +1149,7 @@
                 <div class="feature-card">
                     <i class="fas fa-shipping-fast"></i>
                     <h3>Free Shipping</h3>
-                    <p>On orders over $50</p>
+                    <p>On orders over ?50</p>
                 </div>
                 <div class="feature-card">
                     <i class="fas fa-undo"></i>
@@ -168,10 +1263,10 @@
                 if (result.success) {
                     const categoriesGrid = document.getElementById('categories-grid');
                     categoriesGrid.innerHTML = result.data.map(category => `
-                        <div class="category-card" onclick="filterByCategory(${category.id})">
+                        <div class="category-card" onclick="filterByCategory(?{category.id})">
                             <i class="fas fa-tag"></i>
-                            <h3>${category.name}</h3>
-                            <p>${category.productCount || 0} products</p>
+                            <h3>?{category.name}</h3>
+                            <p>?{category.productCount || 0} products</p>
                         </div>
                     `).join('');
                 }
@@ -181,7 +1276,1401 @@
         }
 
         function filterByCategory(categoryId) {
-            window.location.href = `products.html?category=${categoryId}`;
+            window.location.href = `products.html?category=?{categoryId}`;
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline active">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Login Section -->
+    <section class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <i class="fas fa-user-circle"></i>
+                <h1>Welcome Back</h1>
+                <p>Sign in to your account to continue</p>
+            </div>
+
+            <div id="alert-container"></div>
+
+            <form class="auth-form" id="login-form">
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                </div>
+
+                <div class="form-options">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-sign-in-alt"></i> Sign In
+                </button>
+            </form>
+
+            <div class="social-login">
+                <p>Or continue with</p>
+                <div class="social-buttons">
+                    <button class="social-btn google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button class="social-btn facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button class="social-btn twitter">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <p>Don't have an account? <a href="register.html">Create one now</a></p>
+            </div>
+
+            <div class="demo-credentials">
+                <p><i class="fas fa-info-circle"></i> Demo Credentials:</p>
+                <p>Email: john@example.com</p>
+                <p>Password: password123</p>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .remember-me input {
+            width: 18px;
+            height: 18px;
+        }
+        
+        .forgot-password {
+            color: #667eea;
+            font-size: 14px;
+        }
+        
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+        
+        .social-login {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .social-login p {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .social-btn.google:hover {
+            background: #db4437;
+            color: white;
+            border-color: #db4437;
+        }
+        
+        .social-btn.facebook:hover {
+            background: #4267B2;
+            color: white;
+            border-color: #4267B2;
+        }
+        
+        .social-btn.twitter:hover {
+            background: #1DA1F2;
+            color: white;
+            border-color: #1DA1F2;
+        }
+        
+        .demo-credentials {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #666;
+        }
+        
+        .demo-credentials p {
+            margin: 5px 0;
+        }
+        
+        .demo-credentials i {
+            color: #667eea;
+        }
+    </style>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            
+            // Check if already logged in
+            if (localStorage.getItem('token')) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in...';
+            
+            const result = await login(email, password);
+            
+            if (result.success) {
+                showNotification('Welcome back! Login successful.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1500);
+            } else {
+                showAlert(result.error || 'Login failed. Please try again.', 'danger');
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
+        });
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `<div class="alert alert-?{type}">?{message}</div>`;
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link active">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>My Orders</h1>
+        <p>Track and manage your orders</p>
+    </div>
+
+    <!-- Orders Section -->
+    <section class="orders-page">
+        <div class="container">
+            <div class="orders-container" id="orders-container">
+                <!-- Orders loaded dynamically -->
+            </div>
+
+            <!-- Empty Orders State -->
+            <div class="empty-orders" id="empty-orders" style="display: none;">
+                <i class="fas fa-box-open"></i>
+                <h2>No Orders Yet</h2>
+                <p>You haven't placed any orders yet. Start shopping to see your orders here.</p>
+                <a href="products.html" class="btn btn-primary">Browse Products</a>
+            </div>
+
+            <!-- Login Prompt -->
+            <div class="login-prompt" id="login-prompt" style="display: none;">
+                <div class="empty-orders">
+                    <i class="fas fa-user-lock"></i>
+                    <h2>Please Login</h2>
+                    <p>You need to be logged in to view your orders.</p>
+                    <a href="login.html" class="btn btn-primary">Login Now</a>
+                    <p style="margin-top: 15px;">Don't have an account? <a href="register.html">Register here</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Order Details Modal -->
+    <div class="modal" id="order-modal" style="display: none;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-clipboard-list"></i> Order Details</h2>
+                <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            </div>
+            <div class="modal-body" id="order-details">
+                <!-- Order details loaded dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 20px;
+        }
+        
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+        
+        .modal-body {
+            padding: 20px;
+        }
+        
+        .order-detail-section {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .order-detail-section:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .order-detail-section h3 {
+            margin-bottom: 15px;
+            font-size: 16px;
+            color: #667eea;
+        }
+        
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        
+        .detail-label {
+            color: #666;
+        }
+        
+        .detail-value {
+            font-weight: 500;
+        }
+        
+        .login-prompt {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .empty-orders i {
+            font-size: 80px;
+            color: var(--gray-color);
+            margin-bottom: 20px;
+        }
+        
+        .empty-orders h2 {
+            margin-bottom: 10px;
+        }
+        
+        .empty-orders p {
+            color: var(--gray-color);
+            margin-bottom: 20px;
+        }
+        
+        .empty-orders a {
+            color: var(--primary-color);
+        }
+    </style>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let orders = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            checkAuthState();
+            
+            if (!localStorage.getItem('token')) {
+                document.getElementById('orders-container').style.display = 'none';
+                document.getElementById('empty-orders').style.display = 'none';
+                document.getElementById('login-prompt').style.display = 'block';
+                return;
+            }
+            
+            loadOrders();
+        });
+
+        async function loadOrders() {
+            const container = document.getElementById('orders-container');
+            container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-spinner fa-spin" style="font-size: 30px;"></i><p>Loading orders...</p></div>';
+            
+            try {
+                const response = await fetch('/api/users/orders', {
+                    headers: getAuthHeaders()
+                });
+                
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    orders = result.data;
+                    displayOrders(result.data);
+                } else {
+                    container.style.display = 'none';
+                    document.getElementById('empty-orders').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('Error loading orders:', error);
+                container.innerHTML = '<div style="text-align: center; padding: 40px;"><i class="fas fa-exclamation-triangle" style="font-size: 30px; color: #dc3545;"></i><p>Error loading orders. Please try again.</p></div>';
+            }
+        }
+
+        function displayOrders(ordersData) {
+            const container = document.getElementById('orders-container');
+            const emptyOrders = document.getElementId('empty-orders');
+            
+            if (ordersData.length === 0) {
+                container.style.display = 'none';
+                emptyOrders.style.display = 'block';
+                return;
+            }
+            
+            container.style.display = 'block';
+            emptyOrders.style.display = 'none';
+            
+            container.innerHTML = ordersData.map(order => `
+                <div class="order-card">
+                    <div class="order-header">
+                        <div>
+                            <span class="order-id">Order #?{order.id}</span>
+                            <span class="order-date">?{new Date(order.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                        </div>
+                        <span class="order-status status-?{order.status}">?{order.status}</span>
+                    </div>
+                    <div class="order-items">
+                        ?{order.items.map(item => `
+                            <div class="order-item">
+                                <img src="?{item.image || 'https://via.placeholder.com/60x60?text=No+Image'}" 
+                                     alt="?{item.name}" 
+                                     class="order-item-image"
+                                     onerror="this.src='https://via.placeholder.com/60x60?text=No+Image'">
+                                <div class="order-item-details">
+                                    <span class="order-item-name">?{item.name}</span>
+                                    <span class="order-item-quantity">Qty: ?{item.quantity}</span>
+                                </div>
+                                <span class="order-item-price">??{(item.price * item.quantity).toFixed(2)}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="order-footer">
+                        <div class="order-total">
+                            Total: ??{order.total.toFixed(2)}
+                        </div>
+                        <div class="order-actions">
+                            <button class="btn btn-outline btn-small" onclick="viewOrderDetails(?{order.id})">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                            ?{order.status === 'delivered' ? `
+                                <button class="btn btn-primary btn-small" onclick="reorder(?{order.id})">
+                                    <i class="fas fa-redo"></i> Reorder
+                                </button>
+                            ` : ''}
+                            ?{order.status === 'pending' ? `
+                                <button class="btn btn-danger btn-small" onclick="cancelOrder(?{order.id})">
+                                    <i class="fas fa-times"></i> Cancel
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function viewOrderDetails(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            const modal = document.getElementById('order-modal');
+            const details = document.getElementById('order-details');
+            
+            details.innerHTML = `
+                <div class="order-detail-section">
+                    <h3>Order Information</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Order ID</span>
+                        <span class="detail-value">#?{order.id}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Order Date</span>
+                        <span class="detail-value">?{new Date(order.createdAt).toLocaleString()}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Status</span>
+                        <span class="order-status status-?{order.status}">?{order.status}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Payment Method</span>
+                        <span class="detail-value">?{order.paymentMethod || 'Credit Card'}</span>
+                    </div>
+                </div>
+                
+                <div class="order-detail-section">
+                    <h3>Items</h3>
+                    ?{order.items.map(item => `
+                        <div class="detail-row" style="margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                            <div>
+                                <span class="detail-value">?{item.name}</span>
+                                <br>
+                                <span class="detail-label">Qty: ?{item.quantity} × ??{item.price.toFixed(2)}</span>
+                            </div>
+                            <span class="detail-value">??{(item.price * item.quantity).toFixed(2)}</span>
+                        </div>
+                    `).join('')}
+                    <div class="detail-row">
+                        <span class="detail-label">Subtotal</span>
+                        <span class="detail-value">??{order.total.toFixed(2)}</span>
+                    </div>
+                </div>
+                
+                ?{order.shippingAddress ? `
+                    <div class="order-detail-section">
+                        <h3>Shipping Address</h3>
+                        <div class="detail-row">
+                            <span class="detail-label">Name</span>
+                            <span class="detail-value">?{order.shippingAddress.name || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Address</span>
+                            <span class="detail-value">?{order.shippingAddress.address || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">City</span>
+                            <span class="detail-value">?{order.shippingAddress.city || 'N/A'}</span>
+                        </div>
+                        <div class="detail-row">
+                            <span class="detail-label">Phone</span>
+                            <span class="detail-value">?{order.shippingAddress.phone || 'N/A'}</span>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div class="order-detail-section">
+                    <h3>Order Summary</h3>
+                    <div class="detail-row">
+                        <span class="detail-label">Subtotal</span>
+                        <span class="detail-value">??{order.total.toFixed(2)}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Shipping</span>
+                        <span class="detail-value">FREE</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Tax</span>
+                        <span class="detail-value">Included</span>
+                    </div>
+                    <div class="detail-row" style="font-size: 18px; font-weight: 600; margin-top: 10px; padding-top: 10px; border-top: 2px solid #667eea;">
+                        <span class="detail-label">Total</span>
+                        <span class="detail-value" style="color: #667eea;">??{order.total.toFixed(2)}</span>
+                    </div>
+                </div>
+            `;
+            
+            modal.style.display = 'flex';
+        }
+
+        function closeOrderModal() {
+            document.getElementById('order-modal').style.display = 'none';
+        }
+
+        function reorder(orderId) {
+            const order = orders.find(o => o.id === orderId);
+            if (!order) return;
+            
+            // Add all items back to cart
+            order.items.forEach(item => {
+                const existingItem = cart.find(cartItem => cartItem.id === item.productId);
+                if (existingItem) {
+                    existingItem.quantity += item.quantity;
+                } else {
+                    cart.push({
+                        id: item.productId,
+                        name: item.name,
+                        price: item.price,
+                        image: item.image,
+                        quantity: item.quantity
+                    });
+                }
+            });
+            
+            saveCartToStorage();
+            updateCartBadge();
+            showNotification('Items added to cart!', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'cart.html';
+            }, 1500);
+        }
+
+        async function cancelOrder(orderId) {
+            if (!confirm('Are you sure you want to cancel this order?')) return;
+            
+            try {
+                const response = await fetch(`/api/orders/?{orderId}/cancel`, {
+                    method: 'POST',
+                    headers: getAuthHeaders()
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showNotification('Order cancelled successfully!', 'success');
+                    loadOrders();
+                } else {
+                    showNotification('Error cancelling order: ' + result.error, 'danger');
+                }
+            } catch (error) {
+                showNotification('Error cancelling order: ' + error.message, 'danger');
+            }
+        }
+
+        // Close modal on outside click
+        document.getElementById('order-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'order-modal') {
+                closeOrderModal();
+            }
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link active">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons" id="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary">Register</a>
+            </div>
+            <div class="user-menu" id="user-menu" style="display: none;">
+                <span class="user-name" id="user-name"></span>
+                <button class="btn btn-outline" onclick="logout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="page-header">
+        <h1>Our Products</h1>
+        <p>Discover amazing products at unbeatable prices</p>
+    </div>
+
+    <!-- Products Section -->
+    <section class="products-page">
+        <div class="container">
+            <div class="products-layout">
+                <!-- Sidebar Filters -->
+                <aside class="sidebar">
+                    <div class="filter-section">
+                        <h3><i class="fas fa-search"></i> Search</h3>
+                        <div class="search-box">
+                            <input type="text" id="search-input" placeholder="Search products...">
+                            <button onclick="searchProducts()">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-filter"></i> Filters</h3>
+                        <div class="filter-options">
+                            <label class="filter-option">
+                                <input type="checkbox" id="featured-filter" onchange="applyFilters()">
+                                <span>Featured Only</span>
+                            </label>
+                            <label class="filter-option">
+                                <input type="checkbox" id="in-stock-filter" checked onchange="applyFilters()">
+                                <span>In Stock</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-dollar-sign"></i> Price Range</h3>
+                        <div class="price-range">
+                            <input type="number" id="min-price" placeholder="Min" onchange="applyFilters()">
+                            <span>-</span>
+                            <input type="number" id="max-price" placeholder="Max" onchange="applyFilters()">
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-list"></i> Categories</h3>
+                        <div class="filter-options" id="category-filters">
+                            <!-- Categories loaded dynamically -->
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h3><i class="fas fa-sort"></i> Sort By</h3>
+                        <select id="sort-select" onchange="applyFilters()">
+                            <option value="name-asc">Name (A-Z)</option>
+                            <option value="name-desc">Name (Z-A)</option>
+                            <option value="price-asc">Price (Low to High)</option>
+                            <option value="price-desc">Price (High to Low)</option>
+                            <option value="newest">Newest First</option>
+                        </select>
+                    </div>
+
+                    <button class="btn btn-outline clear-filters" onclick="clearFilters()">
+                        <i class="fas fa-times"></i> Clear Filters
+                    </button>
+                </aside>
+
+                <!-- Products Grid -->
+                <div class="products-container">
+                    <div class="products-header">
+                        <h2>All Products <span id="product-count">(0)</span></h2>
+                        <div class="view-options">
+                            <button class="btn btn-outline btn-small" onclick="setView('grid')">
+                                <i class="fas fa-th-large"></i>
+                            </button>
+                            <button class="btn btn-outline btn-small" onclick="setView('list')">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="products-grid" id="products-grid">
+                        <!-- Products loaded dynamically -->
+                    </div>
+
+                    <div class="pagination" id="pagination">
+                        <!-- Pagination loaded dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <h3>ShopMax</h3>
+                    <p>Your one-stop shop for all your needs. Quality products, best prices.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="products.html">Products</a></li>
+                        <li><a href="cart.html">Cart</a></li>
+                        <li><a href="orders.html">Orders</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Support</h3>
+                    <ul>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Shipping Info</a></li>
+                        <li><a href="#">Returns</a></li>
+                        <li><a href="api-docs.html">API Docs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contact</h3>
+                    <p><i class="fas fa-envelope"></i> support@shopmax.com</p>
+                    <p><i class="fas fa-phone"></i> 1-800-SHOPMAX</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 ShopMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/app.js"></script>
+    <script>
+        let currentPage = 1;
+        let totalPages = 1;
+        let allProducts = [];
+        let selectedCategories = [];
+
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadProducts();
+            updateCartBadge();
+            checkAuthState();
+
+            // Check URL params for category filter
+            const urlParams = new URLSearchParams(window.location.search);
+            const categoryId = urlParams.get('category');
+            if (categoryId) {
+                selectedCategories = [parseInt(categoryId)];
+                document.getElementById('category-filters').querySelectorAll('input[type="checkbox"]').forEach(cb => {
+                    if (parseInt(cb.value) === parseInt(categoryId)) cb.checked = true;
+                });
+            }
+
+            // Search on Enter key
+            document.getElementById('search-input').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') searchProducts();
+            });
+        });
+
+        async function loadCategories() {
+            try {
+                const response = await fetch('/api/categories');
+                const result = await response.json();
+                
+                if (result.success) {
+                    const container = document.getElementById('category-filters');
+                    container.innerHTML = result.data.map(category => `
+                        <label class="filter-option">
+                            <input type="checkbox" value="?{category.id}" onchange="toggleCategory(?{category.id})">
+                            <span>?{category.name}</span>
+                        </label>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading categories:', error);
+            }
+        }
+
+        async function loadProducts() {
+            try {
+                const params = new URLSearchParams();
+                params.append('page', currentPage);
+                params.append('limit', 12);
+
+                const search = document.getElementById('search-input').value;
+                if (search) params.append('search', search);
+
+                const minPrice = document.getElementById('min-price').value;
+                const maxPrice = document.getElementById('max-price').value;
+                if (minPrice) params.append('minPrice', minPrice);
+                if (maxPrice) params.append('maxPrice', maxPrice);
+
+                if (document.getElementById('featured-filter').checked) {
+                    params.append('featured', 'true');
+                }
+
+                const sortBy = document.getElementById('sort-select').value;
+                if (sortBy === 'price-asc') {
+                    params.append('sortBy', 'price');
+                    params.append('sortOrder', 'asc');
+                } else if (sortBy === 'price-desc') {
+                    params.append('sortBy', 'price');
+                    params.append('sortOrder', 'desc');
+                } else if (sortBy === 'name-asc') {
+                    params.append('sortBy', 'name');
+                    params.append('sortOrder', 'asc');
+                } else if (sortBy === 'name-desc') {
+                    params.append('sortBy', 'name');
+                    params.append('sortOrder', 'desc');
+                } else if (sortBy === 'newest') {
+                    params.append('sortBy', 'id');
+                    params.append('sortOrder', 'desc');
+                }
+
+                const response = await fetch(`/api/products??{params.toString()}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    allProducts = result.data;
+                    totalPages = result.totalPages || Math.ceil(result.count / 12);
+                    currentPage = result.page || 1;
+                    
+                    displayProducts(result.data);
+                    updatePagination();
+                }
+            } catch (error) {
+                console.error('Error loading products:', error);
+            }
+        }
+
+        function displayProducts(products) {
+            const grid = document.getElementById('products-grid');
+            const countEl = document.getElementById('product-count');
+            
+            countEl.textContent = `(?{products.length})`;
+            
+            if (products.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1; text-align: center; padding: 60px 20px;">
+                        <i class="fas fa-box-open" style="font-size: 60px; color: #ccc; margin-bottom: 20px;"></i>
+                        <h3>No products found</h3>
+                        <p>Try adjusting your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            grid.innerHTML = products.map(product => createProductCard(product)).join('');
+        }
+
+        function updatePagination() {
+            const pagination = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+            
+            let html = `
+                <button ?{currentPage === 1 ? 'disabled' : ''} onclick="goToPage(?{currentPage - 1})">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </button>
+            `;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    html += `
+                        <button class="?{i === currentPage ? 'active' : ''}" onclick="goToPage(?{i})">
+                            ?{i}
+                        </button>
+                    `;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    html += '<button disabled>...</button>';
+                }
+            }
+            
+            html += `
+                <button ?{currentPage === totalPages ? 'disabled' : ''} onclick="goToPage(?{currentPage + 1})">
+                    Next <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            
+            pagination.innerHTML = html;
+        }
+
+        function goToPage(page) {
+            currentPage = page;
+            loadProducts();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function searchProducts() {
+            currentPage = 1;
+            loadProducts();
+        }
+
+        function applyFilters() {
+            currentPage = 1;
+            loadProducts();
+        }
+
+        function toggleCategory(categoryId) {
+            const index = selectedCategories.indexOf(categoryId);
+            if (index > -1) {
+                selectedCategories.splice(index, 1);
+            } else {
+                selectedCategories.push(categoryId);
+            }
+            applyFilters();
+        }
+
+        function clearFilters() {
+            document.getElementById('search-input').value = '';
+            document.getElementById('min-price').value = '';
+            document.getElementById('max-price').value = '';
+            document.getElementById('featured-filter').checked = false;
+            document.getElementById('sort-select').value = 'name-asc';
+            
+            document.querySelectorAll('#category-filters input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+            
+            selectedCategories = [];
+            currentPage = 1;
+            loadProducts();
+        }
+
+        function setView(view) {
+            const grid = document.getElementById('products-grid');
+            grid.className = view === 'grid' ? 'products-grid' : 'products-list';
+        }
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - ShopMax</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-shopping-bag"></i> ShopMax
+            </a>
+            <ul class="nav-menu">
+                <li><a href="index.html" class="nav-link">Home</a></li>
+                <li><a href="products.html" class="nav-link">Products</a></li>
+                <li><a href="cart.html" class="nav-link">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span class="cart-badge" id="cart-badge">0</span>
+                </a></li>
+                <li><a href="orders.html" class="nav-link">Orders</a></li>
+                <li><a href="api-docs.html" class="nav-link">API Docs</a></li>
+            </ul>
+            <div class="auth-buttons">
+                <a href="login.html" class="btn btn-outline">Login</a>
+                <a href="register.html" class="btn btn-primary active">Register</a>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Register Section -->
+    <section class="auth-page">
+        <div class="auth-container" style="max-width: 500px;">
+            <div class="auth-header">
+                <i class="fas fa-user-plus"></i>
+                <h1>Create Account</h1>
+                <p>Join ShopMax and start shopping today</p>
+            </div>
+
+            <div id="alert-container"></div>
+
+            <form class="auth-form" id="register-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">
+                            <i class="fas fa-user"></i> Full Name
+                        </label>
+                        <input type="text" id="name" placeholder="John Doe" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="phone">
+                            <i class="fas fa-phone"></i> Phone
+                        </label>
+                        <input type="tel" id="phone" placeholder="+1 234 567 8900">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email Address
+                    </label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> Password
+                    </label>
+                    <input type="password" id="password" placeholder="Create a strong password" required minlength="6">
+                    <small>At least 6 characters</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirm-password">
+                        <i class="fas fa-lock"></i> Confirm Password
+                    </label>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                </div>
+
+                <div class="terms-conditions">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="terms" required>
+                        <span>I agree to the <a href="#">Terms & Conditions</a> and <a href="#">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <div class="newsletter">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newsletter">
+                        <span>Subscribe to our newsletter for exclusive offers</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-user-plus"></i> Create Account
+                </button>
+            </form>
+
+            <div class="social-login">
+                <p>Or continue with</p>
+                <div class="social-buttons">
+                    <button class="social-btn google">
+                        <i class="fab fa-google"></i>
+                    </button>
+                    <button class="social-btn facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </button>
+                    <button class="social-btn twitter">
+                        <i class="fab fa-twitter"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="auth-footer">
+                <p>Already have an account? <a href="login.html">Sign in here</a></p>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .auth-container {
+            max-width: 500px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .terms-conditions,
+        .newsletter {
+            margin-bottom: 20px;
+        }
+        
+        .checkbox-label {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .checkbox-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+        }
+        
+        .checkbox-label a {
+            color: #667eea;
+        }
+        
+        .checkbox-label a:hover {
+            text-decoration: underline;
+        }
+        
+        .social-login {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 25px;
+            border-top: 1px solid #eee;
+        }
+        
+        .social-login p {
+            color: #999;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .social-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.3s;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .social-btn.google:hover {
+            background: #db4437;
+            color: white;
+            border-color: #db4437;
+        }
+        
+        .social-btn.facebook:hover {
+            background: #4267B2;
+            color: white;
+            border-color: #4267B2;
+        }
+        
+        .social-btn.twitter:hover {
+            background: #1DA1F2;
+            color: white;
+            border-color: #1DA1F2;
+        }
+    </style>
+
+    <script src="js/app.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            updateCartBadge();
+            
+            // Check if already logged in
+            if (localStorage.getItem('token')) {
+                window.location.href = 'index.html';
+            }
+        });
+
+        document.getElementById('register-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            
+            // Validation
+            if (password !== confirmPassword) {
+                showAlert('Passwords do not match!', 'danger');
+                return;
+            }
+            
+            if (password.length < 6) {
+                showAlert('Password must be at least 6 characters!', 'danger');
+                return;
+            }
+            
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account...';
+            
+            const result = await register(name, email, password);
+            
+            if (result.success) {
+                showNotification('Account created successfully! Please login.', 'success');
+                
+                // Auto login after registration
+                setTimeout(async () => {
+                    const loginResult = await login(email, password);
+                    if (loginResult.success) {
+                        window.location.href = 'index.html';
+                    } else {
+                        window.location.href = 'login.html';
+                    }
+                }, 1500);
+            } else {
+                showAlert(result.error || 'Registration failed. Please try again.', 'danger');
+            }
+            
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Account';
+        });
+
+        function showAlert(message, type) {
+            const container = document.getElementById('alert-container');
+            container.innerHTML = `<div class="alert alert-?{type}">?{message}</div>`;
         }
     </script>
 </body>
