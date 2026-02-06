@@ -12,44 +12,63 @@ document.addEventListener('DOMContentLoaded', () => {
     loadCartFromStorage();
     updateCartBadge();
     checkAuthState();
-    setupMobileMenu();
 });
 
 // ============== Utility Functions ==============
 
 function createProductCard(product) {
-    const imageUrl = product.image || `https://via.placeholder.com/300x200?text=?{encodeURIComponent(product.name)}`;
+    const imageUrl = product.image || `https://via.placeholder.com/300x200?text=${encodeURIComponent(product.name)}`;
+    const rating = product.rating || 4.5;
+    const reviewCount = product.reviewCount || 0;
+    const originalPrice = product.originalPrice ? product.originalPrice > product.price : false;
+    
     return `
         <div class="product-card">
-            <img src="?{imageUrl}" alt="?{product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
-            <div class="product-info">
-                <span class="product-category">?{product.category || 'General'}</span>
-                <h3 class="product-name">?{product.name}</h3>
-                <p class="product-description">?{product.description || 'No description available'}</p>
-                <div class="product-price">??{product.price.toFixed(2)}</div>
+            <div style="position: relative;">
+                <img src="${imageUrl}" alt="${product.name}" class="product-image" onerror="this.src='https://via.placeholder.com/300x200?text=No+Image'">
                 <div class="product-actions">
-                    <button class="btn btn-outline btn-small" onclick="addToWishlist(?{product.id})">
+                    <button class="product-action-btn" onclick="addToWishlist(${product.id})" title="Add to Wishlist">
                         <i class="far fa-heart"></i>
                     </button>
-                    <button class="btn btn-primary btn-small" onclick="addToCart(?{product.id})">
-                        <i class="fas fa-cart-plus"></i> Add to Cart
+                    <button class="product-action-btn" onclick="quickView(${product.id})" title="Quick View">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </div>
+            </div>
+            <div class="product-info">
+                <span class="product-category">${product.category || 'General'}</span>
+                <a href="product-details.html?id=${product.id}" class="product-name">${product.name}</a>
+                <div class="product-rating">
+                    <i class="fas fa-star"></i>
+                    <span>${rating.toFixed(1)} (${reviewCount} reviews)</span>
+                </div>
+                <div class="product-price">
+                    <span class="current-price">₹${product.price.toFixed(2)}</span>
+                    ${originalPrice ? `<span class="original-price">₹${product.originalPrice.toFixed(2)}</span>` : ''}
+                </div>
+                <button class="btn btn-primary btn-small product-btn" onclick="addToCart(${product.id})">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
             </div>
         </div>
     `;
 }
 
 function showNotification(message, type = 'success') {
-    const notification = document.createElement('div');
-    notification.className = `alert alert-?{type}`;
-    notification.style.cssText = 'position: fixed; top: 90px; right: 20px; z-index: 9999; max-width: 350px; animation: slideIn 0.3s ease;';
-    notification.innerHTML = message;
-    document.body.appendChild(notification);
+    const existingToast = document.querySelector('.toast');
+    if (existingToast) existingToast.remove();
+    
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+        <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i>
+        <span>${message}</span>
+    `;
+    document.body.appendChild(toast);
     
     setTimeout(() => {
-        notification.style.animation = 'fadeOut 0.3s ease';
-        setTimeout(() => notification.remove(), 300);
+        toast.style.animation = 'slideIn 0.3s ease reverse';
+        setTimeout(() => toast.remove(), 300);
     }, 3000);
 }
 
@@ -69,23 +88,23 @@ function checkAuthState() {
 }
 
 function showAuthButtons(show) {
-    const authButtons = document.getElementById('auth-buttons');
-    const userMenu = document.getElementById('user-menu');
+    const authSection = document.getElementById('auth-section');
+    const userSection = document.getElementById('user-section');
     
-    if (authButtons) authButtons.style.display = show ? 'flex' : 'none';
-    if (userMenu) userMenu.style.display = show ? 'none' : 'flex';
+    if (authSection) authSection.style.display = show ? 'flex' : 'none';
+    if (userSection) userSection.style.display = show ? 'none' : 'flex';
 }
 
 function updateUserName() {
-    const userNameEl = document.getElementById('user-name');
-    if (userNameEl && currentUser) {
-        userNameEl.textContent = `Hi, ?{currentUser.name}`;
+    const displayName = document.getElementById('display-name');
+    if (displayName && currentUser) {
+        displayName.textContent = currentUser.name.split(' ')[0];
     }
 }
 
 async function login(email, password) {
     try {
-        const response = await fetch(`?{API_BASE}/users/login`, {
+        const response = await fetch(`${API_BASE}/users/login`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email, password })
@@ -110,7 +129,7 @@ async function login(email, password) {
 
 async function register(name, email, password) {
     try {
-        const response = await fetch(`?{API_BASE}/users/register`, {
+        const response = await fetch(`${API_BASE}/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name, email, password })
@@ -143,7 +162,7 @@ function logout() {
 function requireAuth() {
     const token = localStorage.getItem('token');
     if (!token) {
-        showNotification('Please login to continue', 'danger');
+        showNotification('Please login to continue', 'error');
         setTimeout(() => {
             window.location.href = 'login.html';
         }, 1500);
@@ -156,7 +175,7 @@ function getAuthHeaders() {
     const token = localStorage.getItem('token');
     return {
         'Content-Type': 'application/json',
-        ...(token && { 'Authorization': `Bearer ?{token}` })
+        ...(token && { 'Authorization': `Bearer ${token}` })
     };
 }
 
@@ -183,34 +202,38 @@ function updateCartBadge() {
 }
 
 function addToCart(productId) {
-    const product = cart.find(item => item.id === productId);
+    // Check if product already in cart
+    const existingItem = cart.find(item => item.id === productId);
     
-    if (product) {
-        product.quantity++;
+    if (existingItem) {
+        existingItem.quantity++;
     } else {
         // Fetch product details
-        fetch(`?{API_BASE}/products/?{productId}`)
+        fetch(`${API_BASE}/products/${productId}`)
             .then(res => res.json())
             .then(data => {
                 if (data.success) {
-                    const productData = data.data;
+                    const product = data.data;
                     cart.push({
-                        id: productData.id,
-                        name: productData.name,
-                        price: productData.price,
-                        image: productData.image,
-                        category: productData.category,
+                        id: product.id,
+                        name: product.name,
+                        price: product.price,
+                        image: product.image,
+                        category: product.category,
                         quantity: 1
                     });
                     saveCartToStorage();
                     updateCartBadge();
-                    showNotification(`?{productData.name} added to cart!`, 'success');
+                    showNotification(`${product.name} added to cart!`, 'success');
                 }
+            })
+            .catch(error => {
+                console.error('Error adding to cart:', error);
+                showNotification('Error adding to cart', 'error');
             });
     }
     
-    if (!cart.find(item => item.id === productId)) {
-        // If product was just added, show notification
+    if (!existingItem) {
         showNotification('Product added to cart!', 'success');
     }
     
@@ -275,8 +298,12 @@ function addToWishlist(productId) {
         localStorage.setItem('wishlist', JSON.stringify(wishlist));
         showNotification('Added to wishlist!', 'success');
     } else {
-        showNotification('Already in wishlist!', 'danger');
+        showNotification('Already in wishlist!', 'error');
     }
+}
+
+function quickView(productId) {
+    window.location.href = `product-details.html?id=${productId}`;
 }
 
 // ============== Order Functions ==============
@@ -295,7 +322,7 @@ async function createOrder(shippingInfo) {
     };
     
     try {
-        const response = await fetch(`?{API_BASE}/orders`, {
+        const response = await fetch(`${API_BASE}/orders`, {
             method: 'POST',
             headers: getAuthHeaders(),
             body: JSON.stringify(orderData)
@@ -316,10 +343,10 @@ async function createOrder(shippingInfo) {
 }
 
 async function loadOrders() {
-    if (!requireAuth()) return;
+    if (!requireAuth()) return [];
     
     try {
-        const response = await fetch(`?{API_BASE}/users/orders`, {
+        const response = await fetch(`${API_BASE}/users/orders`, {
             headers: getAuthHeaders()
         });
         
@@ -336,24 +363,6 @@ async function loadOrders() {
     }
 }
 
-// ============== Mobile Menu ==============
-
-function setupMobileMenu() {
-    const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-    const navMenu = document.querySelector('.nav-menu');
-    
-    if (mobileMenuBtn) {
-        mobileMenuBtn.addEventListener('click', () => {
-            navMenu.classList.toggle('mobile-open');
-        });
-    }
-}
-
-function toggleMobileMenu() {
-    const navMenu = document.querySelector('.nav-menu');
-    navMenu.classList.toggle('mobile-open');
-}
-
 // ============== API Testing ==============
 
 async function testApi(endpoint, method = 'GET', body = null) {
@@ -367,41 +376,13 @@ async function testApi(endpoint, method = 'GET', body = null) {
     }
     
     try {
-        const response = await fetch(`?{API_BASE}?{endpoint}`, options);
+        const response = await fetch(`${API_BASE}${endpoint}`, options);
         const data = await response.json();
         return data;
     } catch (error) {
         return { success: false, error: error.message };
     }
 }
-
-// Add CSS for notifications and mobile menu
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-    @keyframes fadeOut {
-        from { opacity: 1; }
-        to { opacity: 0; }
-    }
-    .nav-menu.mobile-open {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        top: 70px;
-        left: 0;
-        right: 0;
-        background: white;
-        padding: 20px;
-        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
-    }
-    .nav-menu.mobile-open li {
-        margin: 10px 0;
-    }
-`;
-document.head.appendChild(style);
 
 // Export functions for use in other scripts
 window.ShopMax = {
@@ -419,5 +400,6 @@ window.ShopMax = {
     loadOrders,
     testApi,
     requireAuth,
-    getAuthHeaders
+    getAuthHeaders,
+    showNotification
 };
